@@ -56,3 +56,23 @@ extension SCNVector3 {
 		return SCNVector3(column.x, column.y, column.z)
 	}
 }
+
+extension Sequence  {
+	func sum<T: AdditiveArithmetic>(_ predicate: (Element) -> T) -> T {
+		reduce(.zero) { $0 + predicate($1) }
+	}
+}
+extension Collection {
+	func average<T: BinaryInteger>(_ predicate: (Element) -> T) -> T {
+		sum(predicate) / T(count)
+	}
+	func average<T: BinaryInteger, F: BinaryFloatingPoint>(_ predicate: (Element) -> T) -> F {
+		F(sum(predicate)) / F(count)
+	}
+	func average<T: BinaryFloatingPoint>(_ predicate: (Element) -> T) -> T {
+		sum(predicate) / T(count)
+	}
+	func average(_ predicate: (Element) -> Decimal) -> Decimal {
+		sum(predicate) / Decimal(count)
+	}
+}

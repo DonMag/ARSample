@@ -15,6 +15,7 @@
 		FC5412562AE9986D00C4B76B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC5412542AE9986D00C4B76B /* LaunchScreen.storyboard */; };
 		FCF4A3EB2AEAB093001F9F30 /* UserPositionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF4A3EA2AEAB093001F9F30 /* UserPositionsViewController.swift */; };
 		FCF4A3ED2AEAB0A8001F9F30 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF4A3EC2AEAB0A8001F9F30 /* Common.swift */; };
+		FCF4A3EF2AEAF441001F9F30 /* PresetsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF4A3EE2AEAF441001F9F30 /* PresetsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		FC5412572AE9986D00C4B76B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FCF4A3EA2AEAB093001F9F30 /* UserPositionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPositionsViewController.swift; sourceTree = "<group>"; };
 		FCF4A3EC2AEAB0A8001F9F30 /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
+		FCF4A3EE2AEAF441001F9F30 /* PresetsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				FC5412492AE9986C00C4B76B /* AppDelegate.swift */,
 				FC54124B2AE9986C00C4B76B /* SceneDelegate.swift */,
 				FC54124D2AE9986C00C4B76B /* ViewController.swift */,
+				FCF4A3EE2AEAF441001F9F30 /* PresetsViewController.swift */,
 				FCF4A3EA2AEAB093001F9F30 /* UserPositionsViewController.swift */,
 				FCF4A3EC2AEAB0A8001F9F30 /* Common.swift */,
 				FC54124F2AE9986C00C4B76B /* Main.storyboard */,
@@ -149,6 +152,7 @@
 				FC54124A2AE9986C00C4B76B /* AppDelegate.swift in Sources */,
 				FCF4A3EB2AEAB093001F9F30 /* UserPositionsViewController.swift in Sources */,
 				FC54124C2AE9986C00C4B76B /* SceneDelegate.swift in Sources */,
+				FCF4A3EF2AEAF441001F9F30 /* PresetsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
