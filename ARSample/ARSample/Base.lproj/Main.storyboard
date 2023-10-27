@@ -98,7 +98,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1489.3129770992366" y="-1.4084507042253522"/>
+            <point key="canvasLocation" x="1593" y="-291"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="ePE-8K-lVd">
@@ -233,13 +233,13 @@
                     <navigationItem key="navigationItem" id="W8b-ZP-pYR"/>
                     <connections>
                         <outlet property="animSwitch" destination="ZiN-bP-9oU" id="p1i-ey-THB"/>
-                        <outlet property="constrainSwitch" destination="tfF-md-XhJ" id="b8R-X2-V7D"/>
+                        <outlet property="averageSwitch" destination="tfF-md-XhJ" id="MHd-1Q-3SV"/>
                         <outlet property="sceneView" destination="Pqg-fB-o3N" id="3fL-U6-lcJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="p9A-SC-34q" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2460.3053435114502" y="4.9295774647887329"/>
+            <point key="canvasLocation" x="1592" y="356"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="OAN-fN-EMN">

@@ -36,7 +36,6 @@ class LineNode: SCNNode {
 		nodeZAlign.addChildNode(nodeLine)
 		self.addChildNode(nodeZAlign)
 		self.constraints = [SCNLookAtConstraint(target: nodeVector2)]
-		
 	}
 	
 	required init?(coder aDecoder: NSCoder) {

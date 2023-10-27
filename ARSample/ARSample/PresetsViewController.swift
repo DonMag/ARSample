@@ -64,6 +64,8 @@ class PresetsViewController: UIViewController, ARSCNViewDelegate, ARCoachingOver
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		title = "Presets"
+		
 		guard let img = UIImage(named: "grass") else {
 			fatalError("Could not load grass image!")
 		}
@@ -198,7 +200,6 @@ class PresetsViewController: UIViewController, ARSCNViewDelegate, ARCoachingOver
 	}
 	func addShape() {
 		self.sceneView.scene.rootNode.addChildNode(self.shapeNode)
-		self.r = 0.0
 		if animSwitch.isOn {
 			DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
 				self.rotateShape()
@@ -208,6 +209,7 @@ class PresetsViewController: UIViewController, ARSCNViewDelegate, ARCoachingOver
 		}
 	}
 	func rotateShape() {
+		self.r = 0.0
 		Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { t in
 			self.r += 0.025
 			if self.r < 0.51 {
@@ -217,7 +219,7 @@ class PresetsViewController: UIViewController, ARSCNViewDelegate, ARCoachingOver
 			}
 		})
 	}
-	
+
 }
 
 

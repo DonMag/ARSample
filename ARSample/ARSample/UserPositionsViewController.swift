@@ -11,7 +11,7 @@ import ARKit
 class UserPositionsViewController: UIViewController, ARSCNViewDelegate, ARCoachingOverlayViewDelegate, ARSessionDelegate {
 	
 	@IBOutlet weak var sceneView: ARSCNView!
-	@IBOutlet var constrainSwitch: UISwitch!
+	@IBOutlet var averageSwitch: UISwitch!
 	@IBOutlet var animSwitch: UISwitch!
 	
 	var grassImage: UIImage!
@@ -19,7 +19,8 @@ class UserPositionsViewController: UIViewController, ARSCNViewDelegate, ARCoachi
 	let cyanMaterial = SCNMaterial()
 	let orangeMaterial = SCNMaterial()
 
-	var nodes: [SCNNode] = []
+	var origNodes: [SCNNode] = []
+	var newNodes: [SCNNode] = []
 
 	var startingNode : SCNNode!
 	var lineNode : LineNode!
@@ -38,6 +39,8 @@ class UserPositionsViewController: UIViewController, ARSCNViewDelegate, ARCoachi
 	// MARK: - View Didload
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		
+		title = "User"
 		
 		guard let img = UIImage(named: "grass") else {
 			fatalError("Could not load grass image!")
@@ -64,7 +67,9 @@ class UserPositionsViewController: UIViewController, ARSCNViewDelegate, ARCoachi
 	}
 	
 	@IBAction func resetTapped(_ sender: UIButton) {
-		nodes = []
+		origNodes = []
+		newNodes = []
+		startingNode = nil
 		sceneView.scene.rootNode.childNodes.forEach { n in
 			n.removeFromParentNode()
 		}
@@ -73,7 +78,6 @@ class UserPositionsViewController: UIViewController, ARSCNViewDelegate, ARCoachi
 		config.planeDetection = [.horizontal, .vertical]
 		sceneView.session.run(config,  options: [.resetTracking, .removeExistingAnchors])
 		isEditingEnabled = true
-		startingNode = nil
 	}
 	
 	// MARK: - Draw the spheres to create a Shape
@@ -92,20 +96,20 @@ class UserPositionsViewController: UIViewController, ARSCNViewDelegate, ARCoachi
 		
 		node.position = position
 		
-		let lastNode = nodes.last
+		let lastNode = origNodes.last
 		
 		sceneView.scene.rootNode.addChildNode(node)
 		
 		// Add the Sphere to the list.
-		nodes.append(node)
+		origNodes.append(node)
 		
 		// Setting our starting point for drawing a line in real time
-		self.startingNode = nodes.last
+		self.startingNode = origNodes.last
 		
 		if lastNode != nil {
 			// If there are 2 nodes or more
 			
-			if nodes.count >= 2 {
+			if origNodes.count >= 2 {
 				// Create a node line between the nodes
 				let lineBetweenNodes = LineNode(from: (lastNode?.position)!,   to: node.position, lineColor: UIColor.systemBlue)
 				
@@ -121,57 +125,76 @@ class UserPositionsViewController: UIViewController, ARSCNViewDelegate, ARCoachi
 	// MARK: - handle Tap on ImageView
 	
 	@IBAction func fillTapped(_ sender: UIButton) {
-		if startingNode === nodes.last {
+		guard origNodes.count > 2 else { return }
+		
+		if startingNode === origNodes.last {
 			// Create a line segment from the last node to the first node
-			if let firstNode = nodes.first {
+			if let firstNode = origNodes.first {
 				let lineBetweenNodes = LineNode(from: startingNode.position, to: firstNode.position, lineColor: UIColor.systemBlue)
 				sceneView.scene.rootNode.addChildNode(lineBetweenNodes)
 				
-				//Add Image to the Closed Path
-				addImage()
+				isEditingEnabled = false
+
+				// if useAverageY switch is On
+				if averageSwitch.isOn {
+
+					//	get the average Y position of the nodes
+					//	loop through and create a new array with the average Y coordinate
+					//	create Red sphere and line nodes
+					
+					flattenPath()
+					
+					// add the "image shape" using the "flattened" nodes
+					addImage(toNodes: newNodes)
+					
+				} else {
+					
+					// add the "image shape" using the original nodes
+					addImage(toNodes: origNodes)
+					
+				}
 			}
 		}
-		
 	}
 	
 	// MARK: - Add Image function
-	
-	func addImage(){
-		isEditingEnabled = false
+	func flattenPath() {
+
+		let yAvg = origNodes.average(\.position.y)
 		
-		// if useAverageY switch is On
-		//	get the average Y position
-		//	loop through the nodes and update their Y coordinates
-		//	remove and re-create the sphere and line nodes
-		if constrainSwitch.isOn {
-			let yAvg = nodes.average(\.position.y)
-			
-			sceneView.scene.rootNode.childNodes.forEach { n in
-				n.removeFromParentNode()
-			}
-			var prevNode: SCNNode!
-			nodes.forEach { n in
-				n.position.y = yAvg
-				sceneView.scene.rootNode.addChildNode(n)
-				if prevNode != nil {
-					let lineBetweenNodes = LineNode(from: prevNode.position, to: n.position, lineColor: UIColor.systemBlue)
-					sceneView.scene.rootNode.addChildNode(lineBetweenNodes)
-				}
-				prevNode = n
-			}
-			if let fn = nodes.first {
-				let lineBetweenNodes = LineNode(from: prevNode.position, to: fn.position, lineColor: UIColor.systemBlue)
+		origNodes.forEach { n in
+			let sphere = SCNSphere(color: .systemRed, radius: 0.01)
+			let node = SCNNode(geometry: sphere)
+			node.position = n.position
+			node.position.y = yAvg
+			newNodes.append(node)
+		}
+		
+		var prevNode: SCNNode!
+		newNodes.forEach { n in
+			sceneView.scene.rootNode.addChildNode(n)
+			if prevNode != nil {
+				let lineBetweenNodes = LineNode(from: prevNode.position, to: n.position, lineColor: UIColor.systemRed)
 				sceneView.scene.rootNode.addChildNode(lineBetweenNodes)
 			}
+			prevNode = n
 		}
+		if let fn = newNodes.first {
+			let lineBetweenNodes = LineNode(from: prevNode.position, to: fn.position, lineColor: UIColor.systemRed)
+			sceneView.scene.rootNode.addChildNode(lineBetweenNodes)
+		}
+
+	}
+	
+	func addImage(toNodes: [SCNNode]) {
 		
 		let path = UIBezierPath()
 		
-		let xOff = nodes[0].position.x
-		let zOff = nodes[0].position.z
+		let xOff = origNodes[0].position.x
+		let zOff = origNodes[0].position.z
 		
 		// Iterate through the sphere nodes array
-		for (index, nodes) in nodes.enumerated() {
+		for (index, nodes) in toNodes.enumerated() {
 			let position = nodes.position
 			
 			// "normalize" the x and z coordinates
@@ -184,7 +207,6 @@ class UserPositionsViewController: UIViewController, ARSCNViewDelegate, ARCoachi
 				// Add a line segment to the next sphere node
 				path.addLine(to: CGPoint(x: CGFloat(nx), y: CGFloat(nz)))
 			}
-			
 		}
 		
 		path.close()
@@ -195,7 +217,8 @@ class UserPositionsViewController: UIViewController, ARSCNViewDelegate, ARCoachi
 
 		shapeNode = SCNNode(geometry: shape)
 		
-		if let fNode = nodes.first {
+		if let fNode = toNodes.first {
+			// move the "normalized" shape to the first node's position
 			shapeNode.position = fNode.position
 		}
 		
@@ -223,9 +246,6 @@ class UserPositionsViewController: UIViewController, ARSCNViewDelegate, ARCoachi
 		})
 	}
 
-	
-	
-	
 	func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
 		DispatchQueue.main.async { [self] in
 			// get current hit position
@@ -261,8 +281,6 @@ class UserPositionsViewController: UIViewController, ARSCNViewDelegate, ARCoachi
 		// get vector from transform
 		let hitPos = SCNVector3.positionFrom(matrix: firstResult.worldTransform)
 		return hitPos
-		
-		
 		
 	}
 	
