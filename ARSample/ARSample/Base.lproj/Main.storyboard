@@ -196,6 +196,9 @@
                                     </label>
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tfF-md-XhJ">
                                         <rect key="frame" x="123.66666666666666" y="0.0" width="51" height="31"/>
+                                        <connections>
+                                            <action selector="toggleAverageY:" destination="qQS-HN-blq" eventType="valueChanged" id="kCD-ez-1a6"/>
+                                        </connections>
                                     </switch>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Anim On/Off" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CCZ-wE-uWH">
                                         <rect key="frame" x="180.66666666666666" y="5.3333333333333144" width="115.33333333333334" height="20.333333333333332"/>
